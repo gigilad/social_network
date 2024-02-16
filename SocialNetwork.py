@@ -8,7 +8,7 @@ class SocialNetwork:
     def __init__(self, name):
         self.social_name = name
         self.users = []
-        print("The social network", name, "was created")
+        print("The social network", name, "was created!")
 
     @classmethod
     def get_instance(cls):
@@ -27,7 +27,6 @@ class SocialNetwork:
             user.log_out
             print(user.get_username(),"disconnected")
             return
-    print(f"User  not found.") 
     def log_in(self,user_name,password):
         for user in self.users:
             if user.get_username() == user_name and user.get_password() == password:
@@ -36,7 +35,7 @@ class SocialNetwork:
                return
         print(f"Username or Password wrong")   
     def __str__(self):
-       result = ""
+       result = f"{self.social_name} social network:\n"
        for user in self.users:
          result += str(user) + "\n"
        return result

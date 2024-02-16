@@ -1,4 +1,5 @@
 from Comment import Comment
+from SomeObservers import LikeObserver,CommentObserver
 
 
 class Post:
@@ -8,20 +9,35 @@ class Post:
         self.content = content
         self.likes = []
         self.comments = []
+        self.observers=[CommentObserver(),LikeObserver()]
 
     def like(self, user):
-        for liked_user in self.likes:
-            if liked_user.get_username() == user.get_username():
-                return
-        self.likes.append(user)
-        print("Notification to " + self.owner.get_username() + ": " + user.get_username() + " liked your post")
+        if self.owner.get_username() != user.get_username():
+            if user.is_online():
+                for liked_user in self.likes:
+                    if liked_user.get_username() == user.get_username():
+                         print("this user already liked your post")
+                         return
+                self.likes.append(user)
+                self.notify(self.owner,user,"like")
+                self.owner.add_notification(f"{user.get_username()} liked your post")         
 
     def comment(self, user, comment_content):
-        new_comment = Comment(user, comment_content)
-        self.comments.append(new_comment)
-        print("Notification to " + self.owner.get_username() + ": " + user.get_username() +
-              " commented on your post " + comment_content)
+        if self.owner.get_username() != user.get_username():
+            if user.is_online():
+                new_comment = Comment(user, comment_content)
+                self.comments.append(new_comment)
+                self.notify(self.owner,user,"comment",comment_content)
+                self.owner.add_notification(f"{user.get_username()} commented on your post")
 
+
+    def notify(self,post_owner,user,event_type,comment=None):
+        for observer in self.observers:
+            if event_type == "like" and isinstance(observer,LikeObserver):
+                observer.update(post_owner,user)
+            if event_type == "comment" and isinstance(observer,CommentObserver):
+                observer.update(post_owner,user,comment)
+    
     def get_content(self):
         return self.content
 
@@ -33,3 +49,5 @@ class Post:
 
     def get_comments(self):
         return self.comments
+    def get_owner(self):
+        return self.owner
