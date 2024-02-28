@@ -3,18 +3,21 @@ from UserFactory import UserFactory
 
 
 class SocialNetwork:
-    instance = None
+    _instance = None
 
     def __init__(self, name):
-        self.social_name = name
-        self.users = []
-        print("The social network", name, "was created!")
-
+        if SocialNetwork._instance is None:
+            self.social_name = name
+            self.users = []
+            print("The social network", name, "was created!")
+            SocialNetwork._instance = self
+        else:
+            print(f"Instance for {name} already exists.") 
     @classmethod
     def get_instance(cls):
-        if not cls.instance:
-            cls.instance = cls("twitter")
-        return cls.instance
+        if cls._instance is None:
+            raise Exception("No instance of SocialNetwork exists. Use the constructor to create an instance.")
+        return cls._instance
 
     def sign_up(self, user_name, password):
         new_user = UserFactory.create_user(user_name, password, self.users)

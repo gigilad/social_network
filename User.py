@@ -17,7 +17,6 @@ class User:
 
     def follow(self, user_to_follow):
         if self.online:
-           
           if user_to_follow in self.following_list:
             raise ValueError(f"User {self.username} already follows {user_to_follow.username}")
           else:
@@ -39,20 +38,20 @@ class User:
           if post_type == "Text":
             text_post = TextPost(post_type,content, self)
             self.posts.append(text_post)
-            print(f"{self.username} published a post:\n\"{content}\"")
+            print(f"{self.username} published a post:\n\"{content}\"\n")
             self.post_observer.update(text_post)
             return text_post
           elif post_type == "Image":
             image_post = ImagePost(post_type, content, self)
             self.posts.append(image_post)
-            print(f"{self.username} posted a picture")
+            print(f"{self.username} posted a picture\n")
             self.post_observer.update(image_post)
             return image_post
           elif post_type == "Sale":
             sale_post = SalePost(post_type, content, price, location, self)
             self.posts.append(sale_post)
             print(f"{self.username} posted a product for sale:")
-            print(f"For sale! {content}, price: {price}, pickup from: {location}")
+            print(f"For sale! {content}, price: {price}, pickup from: {location}\n")
             self.post_observer.update(sale_post)    
             return sale_post
         else:

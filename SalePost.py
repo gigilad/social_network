@@ -20,7 +20,7 @@ class SalePost(Post):
     def __str__(self):
        available ="Sold!" if self.is_sold else "available"
        result = f"{self.get_owner().get_username()} posted a product for sale:\n"
-       return result +f"{available} {self.content}, price: {self.price}, pickup from: {self.location}"
+       return result +f"{available} {self.content}, price: {self.price}, pickup from: {self.location}\n"
        
        
         

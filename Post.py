@@ -12,21 +12,21 @@ class Post:
         self.observers=[CommentObserver(),LikeObserver()]
 
     def like(self, user):
-        if self.owner.get_username() != user.get_username():
             if user.is_online():
                 for liked_user in self.likes:
                     if liked_user.get_username() == user.get_username():
                          print("this user already liked your post")
                          return
                 self.likes.append(user)
-                self.notify(self.owner,user,"like")
-                self.owner.add_notification(f"{user.get_username()} liked your post")         
+                if self.owner.get_username() != user.get_username():
+                    self.notify(self.owner,user,"like")
+                    self.owner.add_notification(f"{user.get_username()} liked your post")         
 
     def comment(self, user, comment_content):
-        if self.owner.get_username() != user.get_username():
-            if user.is_online():
-                new_comment = Comment(user, comment_content)
-                self.comments.append(new_comment)
+        if user.is_online():
+            new_comment = Comment(user, comment_content)
+            self.comments.append(new_comment)
+            if self.owner.get_username() != user.get_username():
                 self.notify(self.owner,user,"comment",comment_content)
                 self.owner.add_notification(f"{user.get_username()} commented on your post")
 
