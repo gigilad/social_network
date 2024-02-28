@@ -2,6 +2,7 @@ from ImagePost import ImagePost
 from SalePost import SalePost
 from TextPost import TextPost
 from SomeObservers import PostObserver
+from PostFactory import PostFactory
 
 
 class User:
@@ -35,27 +36,12 @@ class User:
        
     def publish_post(self, post_type, content, price=None, location=None):
         if self.online:
-          if post_type == "Text":
-            text_post = TextPost(post_type,content, self)
-            self.posts.append(text_post)
-            print(f"{self.username} published a post:\n\"{content}\"\n")
-            self.post_observer.update(text_post)
-            return text_post
-          elif post_type == "Image":
-            image_post = ImagePost(post_type, content, self)
-            self.posts.append(image_post)
-            print(f"{self.username} posted a picture\n")
-            self.post_observer.update(image_post)
-            return image_post
-          elif post_type == "Sale":
-            sale_post = SalePost(post_type, content, price, location, self)
-            self.posts.append(sale_post)
-            print(f"{self.username} posted a product for sale:")
-            print(f"For sale! {content}, price: {price}, pickup from: {location}\n")
-            self.post_observer.update(sale_post)    
-            return sale_post
+           post =PostFactory.createPost(post_type,content,self,price,location)
+           self.posts.append(post)
+           self.post_observer.update(post)
+           return post
         else:
-            raise ValueError("Invalid post type")
+            raise ValueError("user not online")
 
     def get_username(self):
         return self.username

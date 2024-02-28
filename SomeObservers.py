@@ -14,7 +14,7 @@ class CommentObserver(Observer):
 
 class PostObserver(Observer):
     def update(self,post):
-        for user in post.get_owner().get_followers_list():
+        for user in post.owner.get_followers_list():
             user.add_notification(f"{post.get_owner().get_username()} has a new post")
             
             
